@@ -1,0 +1,21 @@
+{
+  "name": "bavix/flow-native",
+  "description": "Flow Native",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Babichev Maxim",
+      "email": "info@babichev.net"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Bavix\\": "src/"
+    }
+  },
+  "require": {
+    "bavix/foundation": "^1.0",
+    "bavix/sdk": "^1.0",
+    "bavix/kernel": "^1.0"
+  }
+}
