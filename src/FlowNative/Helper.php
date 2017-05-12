@@ -25,6 +25,16 @@ class Helper
 
     /**
      * @param string $name
+     *
+     * @return bool
+     */
+    public function has($name)
+    {
+        return isset($this->helpers[$name]);
+    }
+
+    /**
+     * @param string $name
      * @param array  $arguments
      *
      * @return mixed
