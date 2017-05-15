@@ -8,6 +8,11 @@ class FlowNative
 {
 
     /**
+     * @var Extensions
+     */
+    protected $extensions;
+
+    /**
      * @var Context
      */
     protected $content;
@@ -29,8 +34,17 @@ class FlowNative
      */
     public function __construct(Helper $helper = null)
     {
-        $this->helper  = $helper ?: new Helper();
-        $this->content = new Context($this->helper);
+        $this->helper     = $helper ?: new Helper();
+        $this->extensions = new Extensions();
+        $this->content    = new Context($this->helper, $this->extensions);
+    }
+
+    /**
+     * @return Extensions
+     */
+    public function extensions()
+    {
+        return $this->extensions;
     }
 
     /**
@@ -84,17 +98,23 @@ class FlowNative
      */
     public function render($view, array $arguments = [])
     {
-        $callable = function ($view)
+        $callable = function ($view, FlowNative $flow)
         {
             ob_start();
             require $view;
+
+            foreach ($flow->extensions()->blocks()->getExtends() as $extend)
+            {
+                echo $flow->render($extend);
+            }
 
             return ob_get_clean();
         };
 
         return $callable->call(
             $this->content->mergeData($arguments),
-            $this->path($view)
+            $this->path($view),
+            $this
         );
     }
 

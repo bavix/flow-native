@@ -2,6 +2,8 @@
 
 namespace Bavix\FlowNative;
 
+use Bavix\Exceptions\NotFound;
+
 class Helper
 {
 
@@ -28,7 +30,7 @@ class Helper
      *
      * @return bool
      */
-    public function has($name)
+    public function exists($name)
     {
         return isset($this->helpers[$name]);
     }
@@ -41,7 +43,13 @@ class Helper
      */
     public function __call($name, array $arguments)
     {
-        $newThis  = array_shift($arguments);
+        $newThis = array_shift($arguments);
+
+        if (!$this->exists($name))
+        {
+            throw new NotFound\Data('Helper `' . $name . '` not found!');
+        }
+
         $callable = $this->helpers[$name];
 
         if (method_exists($callable, 'call'))

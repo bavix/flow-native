@@ -4,6 +4,8 @@
         <title><?= $this->substr($this->title, 0, 5) ?></title>
     </head>
     <body>
-        <h1><?= $this->welcome ?></h1>
+        <?php $this->ext->blocks()->start('content', \Bavix\FlowNative\Extensions\APPEND);?>
+            <h2>He</h2>
+        <?php echo $this->ext->blocks()->end() ?>
     </body>
 </html>

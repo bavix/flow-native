@@ -18,13 +18,19 @@ class Context
     protected $helper;
 
     /**
+     * @var Extensions
+     */
+    protected $ext;
+
+    /**
      * Context constructor.
      *
      * @param Helper $helper
      */
-    public function __construct(Helper $helper)
+    public function __construct(Helper $helper, Extensions $ext)
     {
         $this->helper = $helper;
+        $this->ext = $ext;
     }
 
     /**
@@ -42,11 +48,23 @@ class Context
     /**
      * @param string $name
      *
+     * @return bool
+     */
+    protected function exists($name)
+    {
+        return
+            isset($this->data[$name]) ||
+            \array_key_exists($name, $this->data);
+    }
+
+    /**
+     * @param string $name
+     *
      * @return mixed
      */
     public function __get($name)
     {
-        if (!isset($this->data[$name]))
+        if (!$this->exists($name))
         {
             throw new NotFound\Data('Variable `' . $name . '` not found');
         }
@@ -70,7 +88,7 @@ class Context
      */
     public function __isset($name)
     {
-        return isset($this->data[$name]);
+        return $this->exists($name);
     }
 
     /**
