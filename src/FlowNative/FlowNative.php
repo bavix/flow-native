@@ -36,7 +36,7 @@ class FlowNative
     {
         $this->helper     = $helper ?: new Helper();
         $this->extensions = new Extensions();
-        $this->content    = new Context($this->helper, $this->extensions);
+        $this->content    = new Context($this->helper, $this->extensions, $this);
     }
 
     /**
@@ -98,24 +98,30 @@ class FlowNative
      */
     public function render($view, array $arguments = [])
     {
-        $callable = function ($view, FlowNative $flow)
+        $content = clone $this->content;
+        
+        $callable = function ($view)
         {
             ob_start();
             require $view;
 
-            foreach ($flow->extensions()->blocks()->getExtends() as $extend)
+            foreach ($this->flow->extensions()->blocks()->getExtends() as $extend)
             {
-                echo $flow->render($extend);
+                echo $this->flow->render($extend);
             }
 
             return ob_get_clean();
         };
 
-        return $callable->call(
+        $render = $callable->call(
             $this->content->mergeData($arguments),
             $this->path($view),
             $this
         );
+        
+        $this->content = $content;
+        
+        return $render;
     }
 
 }
