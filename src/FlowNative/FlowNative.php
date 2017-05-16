@@ -28,6 +28,11 @@ class FlowNative
     protected $helper;
 
     /**
+     * @var int
+     */
+    protected $level = 0;
+
+    /**
      * FlowNative constructor.
      *
      * @param Helper $helper
@@ -98,8 +103,12 @@ class FlowNative
      */
     public function render($view, array $arguments = [])
     {
-        $content = clone $this->content;
-        
+
+        if (!$this->level++)
+        {
+            $content = clone $this->content;
+        }
+
         $callable = function ($view)
         {
             ob_start();
@@ -118,9 +127,12 @@ class FlowNative
             $this->path($view),
             $this
         );
-        
-        $this->content = $content;
-        
+
+        if (!--$this->level)
+        {
+            $this->content = $content;
+        }
+
         return $render;
     }
 
