@@ -18,6 +18,11 @@ class Context
     protected $helper;
 
     /**
+     * @var FlowNative
+     */
+    protected $flow;
+
+    /**
      * @var Extensions
      */
     protected $ext;
@@ -26,10 +31,13 @@ class Context
      * Context constructor.
      *
      * @param Helper $helper
+     * @param Extensions $ext
+     * @param FlowNative $flow
      */
-    public function __construct(Helper $helper, Extensions $ext)
+    public function __construct(Helper $helper, Extensions $ext, FlowNative $flow)
     {
         $this->helper = $helper;
+        $this->flow = $flow;
         $this->ext = $ext;
     }
 
