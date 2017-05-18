@@ -88,7 +88,7 @@ class FlowNative
      *
      * @return mixed
      */
-    protected function path($view)
+    public function path($view)
     {
         list($bundle, $path) = explode(':', $view, 2);
 
