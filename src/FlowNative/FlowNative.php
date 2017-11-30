@@ -119,7 +119,7 @@ class FlowNative
                 echo trim($this->flow->render($extend));
             }
 
-            return ob_get_clean();
+            return trim(ob_get_clean());
         };
 
         $render = $callable->call(
