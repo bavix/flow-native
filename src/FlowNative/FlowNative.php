@@ -116,7 +116,7 @@ class FlowNative
 
             foreach ($this->flow->extensions()->blocks()->getExtends() as $extend)
             {
-                echo $this->flow->render($extend);
+                echo trim($this->flow->render($extend));
             }
 
             return ob_get_clean();
