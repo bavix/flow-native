@@ -68,7 +68,7 @@ class Blocks
 
         $pop    = array_pop($this->lastBlock);
         $option = $this->options[$pop];
-        $data   = ob_get_clean();
+        $data   = trim(ob_get_clean());
 
         switch ($option)
         {
