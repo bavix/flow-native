@@ -5,12 +5,12 @@ namespace Bavix\FlowNative\Extensions;
 use Bavix\Exceptions\Invalid;
 use Bavix\Exceptions\NotFound\Data;
 
-const RESET   = 0;
-const APPEND  = 1;
-const PREPEND = 2;
-
 class Blocks
 {
+
+    const RESET   = 'reset';
+    const APPEND  = 'append';
+    const PREPEND = 'prepend';
 
     protected $extends   = [];
     protected $lastBlock = [];
