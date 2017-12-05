@@ -43,7 +43,7 @@ class Blocks
         $this->extends[$from] = $layout;
     }
 
-    public function start($name, $option = RESET)
+    public function start($name, $option = self::RESET)
     {
 
         ob_start();
@@ -72,18 +72,18 @@ class Blocks
 
         switch ($option)
         {
-            case RESET:
+            case self::RESET:
                 if (empty($this->blocks[$pop]))
                 {
                     $this->blocks[$pop] = $data;
                 }
                 break;
 
-            case APPEND:
+            case self::APPEND:
                 $this->blocks[$pop] .= $data;
                 break;
 
-            case PREPEND:
+            case self::PREPEND:
                 $this->blocks[$pop] = $data . $this->blocks[$pop];
                 break;
 
