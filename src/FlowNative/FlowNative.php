@@ -109,14 +109,15 @@ class FlowNative
             $content = clone $this->content;
         }
 
-        $callable = function ($view)
+        $callable = function ($__flow__view)
         {
             ob_start();
-            require $view;
+            extract($this->exports());
+            require $__flow__view;
 
-            foreach ($this->native->extensions()->blocks()->getExtends() as $extend)
+            foreach ($this->native->extensions()->blocks()->getExtends() as $__flow__extend)
             {
-                echo trim($this->native->render($extend));
+                echo trim($this->native->render($__flow__extend));
             }
 
             return trim(ob_get_clean());
