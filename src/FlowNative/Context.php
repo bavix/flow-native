@@ -20,7 +20,7 @@ class Context
     /**
      * @var FlowNative
      */
-    protected $flow;
+    protected $native;
 
     /**
      * @var Extensions
@@ -37,8 +37,8 @@ class Context
     public function __construct(Helper $helper, Extensions $ext, FlowNative $flow)
     {
         $this->helper = $helper;
-        $this->flow = $flow;
-        $this->ext = $ext;
+        $this->native = $flow;
+        $this->ext    = $ext;
     }
 
     /**

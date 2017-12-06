@@ -114,9 +114,9 @@ class FlowNative
             ob_start();
             require $view;
 
-            foreach ($this->flow->extensions()->blocks()->getExtends() as $extend)
+            foreach ($this->native->extensions()->blocks()->getExtends() as $extend)
             {
-                echo trim($this->flow->render($extend));
+                echo trim($this->native->render($extend));
             }
 
             return trim(ob_get_clean());
