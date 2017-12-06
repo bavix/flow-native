@@ -90,6 +90,11 @@ class FlowNative
      */
     public function path($view)
     {
+        if (File::exists($view))
+        {
+            return $view;
+        }
+        
         list($bundle, $path) = explode(':', $view, 2);
 
         return $this->folder($bundle, $path);
