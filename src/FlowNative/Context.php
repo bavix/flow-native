@@ -110,4 +110,12 @@ class Context
         return $this->helper->$name($this, ...$arguments);
     }
 
+    /**
+     * @return array
+     */
+    public function exports(): array
+    {
+        return $this->data;
+    }
+
 }
