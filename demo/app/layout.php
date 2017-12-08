@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><?= $this->substr($this->title, 0, 5) ?></title>
+        <?php $title .= ' - ' . \crc32($this->title)?>
+        <title><?=$this->title?></title>
     </head>
     <body>
         <?php $this->ext->blocks()->start('content', \Bavix\FlowNative\Extensions\Blocks::APPEND);?>

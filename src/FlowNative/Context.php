@@ -32,13 +32,23 @@ class Context
      *
      * @param Helper $helper
      * @param Extensions $ext
-     * @param FlowNative $flow
      */
-    public function __construct(Helper $helper, Extensions $ext, FlowNative $flow)
+    public function __construct(Helper $helper, Extensions $ext)
     {
         $this->helper = $helper;
-        $this->native = $flow;
         $this->ext    = $ext;
+    }
+
+    /**
+     * @param FlowNative $flowNative
+     *
+     * @return $this
+     */
+    public function setFlow(FlowNative $flowNative): self
+    {
+        $this->native = $flowNative;
+
+        return $this;
     }
 
     /**
@@ -46,9 +56,9 @@ class Context
      *
      * @return $this
      */
-    public function mergeData(array $data)
+    public function mergeData(array $data): self
     {
-        $this->data = array_merge($this->data, $data);
+        $this->data = \array_merge($this->data, $data);
 
         return $this;
     }
@@ -58,7 +68,7 @@ class Context
      *
      * @return bool
      */
-    protected function exists($name)
+    protected function exists($name): bool
     {
         return
             isset($this->data[$name]) ||
@@ -113,7 +123,7 @@ class Context
     /**
      * @return array
      */
-    public function exports(): array
+    public function &exports(): array
     {
         return $this->data;
     }

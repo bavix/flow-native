@@ -1,6 +1,6 @@
 <?php
 
-$this->ext->blocks()->extends('app:layout.php');
+$this->ext->blocks()->extends('app:layout.php', __FILE__);
 
 $this->ext->blocks()->start('content', \Bavix\FlowNative\Extensions\Blocks::APPEND);
 ?>

@@ -12,15 +12,30 @@ class Blocks
     const APPEND  = 'append';
     const PREPEND = 'prepend';
 
-    protected $extends   = [];
+    /**
+     * @var array
+     */
+    protected $extends = [];
+
+    /**
+     * @var array
+     */
     protected $lastBlock = [];
-    protected $options   = [];
-    protected $blocks    = [];
+
+    /**
+     * @var array
+     */
+    protected $options = [];
+
+    /**
+     * @var array
+     */
+    protected $blocks = [];
 
     /**
      * @return array
      */
-    public function getExtends()
+    public function getExtends(): array
     {
         $extends       = $this->extends;
         $this->extends = [];
@@ -29,10 +44,10 @@ class Blocks
     }
 
     /**
-     * @param      $layout
-     * @param null $from
+     * @param string $layout
+     * @param string $from
      */
-    public function extends ($layout, $from = null)
+    public function extends(string $layout, string $from = null)
     {
         if (!$from)
         {
@@ -43,9 +58,12 @@ class Blocks
         $this->extends[$from] = $layout;
     }
 
-    public function start($name, $option = self::RESET)
+    /**
+     * @param string $name
+     * @param string $option
+     */
+    public function start(string $name, string $option = self::RESET)
     {
-
         ob_start();
 
         if (empty($this->blocks[$name]))
@@ -55,9 +73,11 @@ class Blocks
 
         $this->options[$name] = $option;
         $this->lastBlock[]    = $name;
-
     }
 
+    /**
+     * @return string|null
+     */
     public function end()
     {
 
@@ -66,9 +86,9 @@ class Blocks
             throw new Data('Not found open blocks');
         }
 
-        $pop    = array_pop($this->lastBlock);
+        $pop    = \array_pop($this->lastBlock);
         $option = $this->options[$pop];
-        $data   = trim(ob_get_clean());
+        $data   = \trim(\ob_get_clean());
 
         switch ($option)
         {

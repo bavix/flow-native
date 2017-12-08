@@ -9,14 +9,14 @@ class FlowNative
 {
 
     /**
-     * @var Extensions
-     */
-    protected $extensions;
-
-    /**
      * @var Context
      */
     protected $content;
+
+    /**
+     * @var Sandbox
+     */
+    protected $sandbox;
 
     /**
      * @var array
@@ -24,33 +24,36 @@ class FlowNative
     protected $folders = [];
 
     /**
-     * @var Helper
-     */
-    protected $helper;
-
-    /**
-     * @var int
-     */
-    protected $level = 0;
-
-    /**
      * FlowNative constructor.
      *
-     * @param Helper $helper
+     * @param Context $context
      */
-    public function __construct(Helper $helper = null)
+    public function __construct(Context $context = null)
     {
-        $this->helper     = $helper ?: new Helper();
-        $this->extensions = new Extensions();
-        $this->content    = new Context($this->helper, $this->extensions, $this);
+        $this->content    = $context;
+
+        // set flow
+        $this->content()->setFlow($this);
     }
 
     /**
-     * @return Extensions
+     * Content for Sandbox
+     *
+     * @return Context
      */
-    public function extensions()
+    public function content(): Context
     {
-        return $this->extensions;
+        if (!$this->content)
+        {
+            $this->content = new Context(
+                new Helper(),
+                new Extensions()
+            );
+
+            $this->content->setFlow($this);
+        }
+
+        return $this->content;
     }
 
     /**
@@ -59,7 +62,7 @@ class FlowNative
      *
      * @return $this
      */
-    public function addFolder($name, $path)
+    public function addFolder($name, $path): self
     {
         $this->folders[$name] = $path;
 
@@ -72,7 +75,7 @@ class FlowNative
      *
      * @return string
      */
-    protected function folder($name, $path)
+    protected function folder($name, $path): string
     {
         $fullPath = realpath($this->folders[$name] . '/' . $path);
 
@@ -87,9 +90,9 @@ class FlowNative
     /**
      * @param string $view
      *
-     * @return mixed
+     * @return string
      */
-    public function path($view)
+    public function path(string $view): string
     {
         if (File::exists($view))
         {
@@ -102,6 +105,19 @@ class FlowNative
     }
 
     /**
+     * @return Sandbox
+     */
+    public function sandbox(): Sandbox
+    {
+        if (!$this->sandbox)
+        {
+            $this->sandbox = new Sandbox($this->content());
+        }
+
+        return $this->sandbox;
+    }
+
+    /**
      * @param string $view
      * @param array  $arguments
      *
@@ -109,38 +125,8 @@ class FlowNative
      */
     public function render($view, array $arguments = [])
     {
-
-        if (!$this->level++)
-        {
-            $content = clone $this->content;
-        }
-
-        $callable = function ($__flow__view)
-        {
-            ob_start();
-            extract($this->exports());
-            require $__flow__view;
-
-            foreach ($this->native->extensions()->blocks()->getExtends() as $__flow__extend)
-            {
-                echo trim($this->native->render($__flow__extend));
-            }
-
-            return trim(ob_get_clean());
-        };
-
-        $render = $callable->call(
-            $this->content->mergeData($arguments),
-            $this->path($view),
-            $this
-        );
-
-        if (!--$this->level)
-        {
-            $this->content = $content;
-        }
-
-        return $render;
+        return $this->sandbox()
+            ->execute($view, $arguments);
     }
 
 }
