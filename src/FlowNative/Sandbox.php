@@ -2,12 +2,17 @@
 
 namespace Bavix\FlowNative;
 
+use Bavix\Exceptions\Runtime;
+use Bavix\Helpers\Arr;
 use Bavix\Helpers\Closure;
 
 class Sandbox
 {
 
-    protected $level = 0;
+    /**
+     * @var int
+     */
+    protected $limit;
 
     /**
      * @var Context
@@ -19,9 +24,10 @@ class Sandbox
      *
      * @param Context $context
      */
-    public function __construct(Context $context)
+    public function __construct(Context $context, $limit = 4096)
     {
         $this->content = $context;
+        $this->limit   = $limit;
     }
 
     /**
@@ -50,8 +56,8 @@ class Sandbox
          *
          * @return string
          */
-        $sandbox = function (string $__flow__view): string
-        {
+        $sandbox = function (string $__flow__view) {
+
             /**
              * @var Context $this
              */
@@ -60,29 +66,38 @@ class Sandbox
             \ob_start();
             require $this->native->path($__flow__view);
 
-            foreach ($this->ext->blocks()->getExtends() as $__flow__block__extend)
-            {
-                echo \trim($this->native->render($__flow__block__extend));
-            }
+            return [
+                \trim(\ob_get_clean()),
+                $this->ext->blocks()->getExtends()
+            ];
 
-            return \trim(\ob_get_clean());
         };
 
-        if (!$this->level++)
-        {
-            $content = clone $this->content;
-        }
+        $content  = clone $this->content;
+        $views    = [$view];
+        $response = '';
+        $iterator = 0;
 
-        // sandbox get responses
-        $response = $sandbox->call(
-            $this->content->mergeData($arguments),
-            $view
-        );
+        $content->mergeData($arguments);
 
-        if (!--$this->level)
+        do
         {
-            $this->content = $content;
+            if ($iterator >= $this->limit)
+            {
+                throw new Runtime('The application is not responding');
+            }
+
+            $iterator++;
+
+            $data = $sandbox->call(
+                $content,
+                Arr::pop($views)
+            );
+
+            $response .= $data[0];
+            $views    = Arr::merge($views, $data[1]);
         }
+        while (!empty($views));
 
         return $response;
     }
