@@ -93,7 +93,7 @@ class Blocks
         switch ($option)
         {
             case self::RESET:
-                if (!empty($this->extends))
+                if (empty($this->blocks[$pop]) || !empty($this->extends))
                 {
                     $this->blocks[$pop] = $data;
                 }
