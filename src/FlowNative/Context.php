@@ -10,7 +10,7 @@ class Context
     /**
      * @var array
      */
-    protected $data = [];
+    protected $___data___ = [];
 
     /**
      * @var Helper
@@ -58,7 +58,7 @@ class Context
      */
     public function mergeData(array $data): self
     {
-        $this->data = \array_merge($this->data, $data);
+        $this->___data___ = \array_merge($this->___data___, $data);
 
         return $this;
     }
@@ -71,8 +71,8 @@ class Context
     protected function exists($name): bool
     {
         return
-            isset($this->data[$name]) ||
-            \array_key_exists($name, $this->data);
+            isset($this->___data___[$name]) ||
+            \array_key_exists($name, $this->___data___);
     }
 
     /**
@@ -87,7 +87,7 @@ class Context
             throw new NotFound\Data('Variable `' . $name . '` not found');
         }
 
-        return $this->data[$name];
+        return $this->___data___[$name];
     }
 
     /**
@@ -96,7 +96,7 @@ class Context
      */
     public function __set($name, $mixed)
     {
-        $this->data[$name] = $mixed;
+        $this->___data___[$name] = $mixed;
     }
 
     /**
@@ -125,7 +125,7 @@ class Context
      */
     public function &exports(): array
     {
-        return $this->data;
+        return $this->___data___;
     }
 
 }
