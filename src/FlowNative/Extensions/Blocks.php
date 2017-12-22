@@ -4,6 +4,7 @@ namespace Bavix\FlowNative\Extensions;
 
 use Bavix\Exceptions\Invalid;
 use Bavix\Exceptions\NotFound\Data;
+use Bavix\Exceptions\Runtime;
 
 class Blocks
 {
@@ -13,9 +14,14 @@ class Blocks
     const PREPEND = 'prepend';
 
     /**
-     * @var array
+     * @var string
      */
-    protected $extends = [];
+    protected $from;
+
+    /**
+     * @var string
+     */
+    protected $extends;
 
     /**
      * @var array
@@ -33,12 +39,12 @@ class Blocks
     protected $blocks = [];
 
     /**
-     * @return array
+     * @return null|string
      */
-    public function getExtends(): array
+    public function getExtends()
     {
         $extends       = $this->extends;
-        $this->extends = [];
+        $this->extends = null;
 
         return $extends;
     }
@@ -55,7 +61,13 @@ class Blocks
             $from  = $debug[0]['file'];
         }
 
-        $this->extends[$from] = $layout;
+        if ($from === $this->from)
+        {
+            throw new Runtime('Double extends layout from `' . $from . '`');
+        }
+
+        $this->from    = $from;
+        $this->extends = $layout;
     }
 
     /**
@@ -93,7 +105,7 @@ class Blocks
         switch ($option)
         {
             case self::RESET:
-                if (empty($this->blocks[$pop]) || !empty($this->extends))
+                if (empty($this->blocks[$pop]) || $this->extends)
                 {
                     $this->blocks[$pop] = $data;
                 }
@@ -111,7 +123,7 @@ class Blocks
                 throw new Invalid('Undefined type `' . $option . '` block `' . $pop . '`');
         }
 
-        if (empty($this->extends))
+        if (null === $this->extends)
         {
             return $this->blocks[$pop];
         }

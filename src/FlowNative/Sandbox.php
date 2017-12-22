@@ -3,7 +3,6 @@
 namespace Bavix\FlowNative;
 
 use Bavix\Exceptions\Runtime;
-use Bavix\Helpers\Arr;
 use Bavix\Helpers\Closure;
 
 class Sandbox
@@ -63,19 +62,19 @@ class Sandbox
              */
             \extract($this->exports(), EXTR_REFS);
 
-            \ob_start();
+//            \ob_start();
             require $this->native->path($__flow__view);
 
-            return [
-                \trim(\ob_get_clean()),
-                $this->ext->blocks()->getExtends()
-            ];
-
+            return //[
+//                \trim(\ob_get_clean()),
+                $this->ext->blocks()->getExtends()//            ];
+                ;
         };
 
+        \ob_start();
+
         $content  = clone $this->content;
-        $views    = [$view];
-        $response = '';
+        $_view    = $view;
         $iterator = 0;
 
         $content->mergeData($arguments);
@@ -89,17 +88,14 @@ class Sandbox
 
             $iterator++;
 
-            $data = $sandbox->call(
+            $_view = $sandbox->call(
                 $content,
-                Arr::pop($views)
+                $_view
             );
-
-            $response .= $data[0];
-            $views    = Arr::merge($views, $data[1]);
         }
-        while (!empty($views));
+        while ($_view);
 
-        return $response;
+        return \trim(\ob_get_clean());
     }
 
 }
