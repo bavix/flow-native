@@ -98,7 +98,7 @@ class FlowNative
         {
             return $view;
         }
-        
+
         list($bundle, $path) = explode(':', $view, 2);
 
         return $this->folder($bundle, $path);
@@ -125,8 +125,12 @@ class FlowNative
      */
     public function render($view, array $arguments = [])
     {
-        return $this->sandbox()
+        \ob_start();
+
+        $this->sandbox()
             ->execute($view, $arguments);
+
+        return \trim(\ob_get_clean());
     }
 
 }

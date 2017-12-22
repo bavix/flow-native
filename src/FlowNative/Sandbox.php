@@ -43,7 +43,7 @@ class Sandbox
      *
      * @return string
      */
-    public function execute(string $view, array $arguments): string
+    public function execute(string $view, array $arguments)
     {
         /**
          * @var Closure $sandbox
@@ -55,23 +55,12 @@ class Sandbox
          *
          * @return string
          */
-        $sandbox = function (string $__flow__view) {
+        $sandbox = function (string $__flow__view)
+        {
+            include $this->native->path($__flow__view);
 
-            /**
-             * @var Context $this
-             */
-            \extract($this->exports(), EXTR_REFS);
-
-//            \ob_start();
-            require $this->native->path($__flow__view);
-
-            return //[
-//                \trim(\ob_get_clean()),
-                $this->ext->blocks()->getExtends()//            ];
-                ;
+            return $this->ext->blocks()->getExtends();
         };
-
-        \ob_start();
 
         $content  = clone $this->content;
         $_view    = $view;
@@ -94,8 +83,6 @@ class Sandbox
             );
         }
         while ($_view);
-
-        return \trim(\ob_get_clean());
     }
 
 }
