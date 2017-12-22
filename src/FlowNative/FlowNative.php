@@ -30,10 +30,16 @@ class FlowNative
      */
     public function __construct(Context $context = null)
     {
-        $this->content    = $context;
+        if ($context)
+        {
+            $this->setContent($context);
+        }
+    }
 
-        // set flow
-        $this->content()->setFlow($this);
+    protected function setContent(Context $context)
+    {
+        $this->content = $context;
+        $this->content->setFlow($this);
     }
 
     /**
@@ -45,12 +51,10 @@ class FlowNative
     {
         if (!$this->content)
         {
-            $this->content = new Context(
+            $this->setContent(new Context(
                 new Helper(),
                 new Extensions()
-            );
-
-            $this->content->setFlow($this);
+            ));
         }
 
         return $this->content;

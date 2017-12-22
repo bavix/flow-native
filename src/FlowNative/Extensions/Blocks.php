@@ -55,17 +55,6 @@ class Blocks
      */
     public function extends(string $layout, string $from = null)
     {
-        if (!$from)
-        {
-            $debug = \debug_backtrace();
-            $from  = $debug[0]['file'];
-        }
-
-        if ($from === $this->from)
-        {
-            throw new Runtime('Double extends layout from `' . $from . '`');
-        }
-
         $this->from    = $from;
         $this->extends = $layout;
     }
@@ -76,7 +65,7 @@ class Blocks
      */
     public function start(string $name, string $option = self::RESET)
     {
-        ob_start();
+        \ob_start();
 
         if (empty($this->blocks[$name]))
         {

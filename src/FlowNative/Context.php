@@ -82,11 +82,6 @@ class Context
      */
     public function &__get($name)
     {
-        if (!$this->exists($name))
-        {
-            throw new NotFound\Data('Variable `' . $name . '` not found');
-        }
-
         return $this->___data___[$name];
     }
 
@@ -107,25 +102,6 @@ class Context
     public function __isset($name)
     {
         return $this->exists($name);
-    }
-
-    /**
-     * @param string $name
-     * @param array  $arguments
-     *
-     * @return mixed
-     */
-    public function __call($name, array $arguments)
-    {
-        return $this->helper->$name($this, ...$arguments);
-    }
-
-    /**
-     * @return array
-     */
-    public function &exports(): array
-    {
-        return $this->___data___;
     }
 
 }

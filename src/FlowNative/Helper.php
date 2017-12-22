@@ -58,21 +58,11 @@ class Helper
      *
      * @return $this
      */
-    public function add($name, callable $callable)
+    public function addHelper($name, callable $callable)
     {
         $this->helpers[$name] = $callable;
 
         return $this;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function exists($name): bool
-    {
-        return isset($this->helpers[$name]);
     }
 
     /**
@@ -83,24 +73,7 @@ class Helper
      */
     public function __call($name, array $arguments)
     {
-        $newThis = \array_shift($arguments);
-
-        if (!$this->exists($name))
-        {
-            throw new NotFound\Data('Helper `' . $name . '` not found!');
-        }
-
-        $callable = $this->helpers[$name];
-
-        if (\method_exists($callable, 'call'))
-        {
-            /**
-             * @var \Closure $callable
-             */
-            return $callable->call($newThis, ...$arguments);
-        }
-
-        return $callable(...$arguments);
+        return \call_user_func($this->helpers[$name], ...$arguments);
     }
 
 }
